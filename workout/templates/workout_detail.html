@@ -1,0 +1,24 @@
+{% extends 'loggedbase.html' %}
+{% load custom_tags %}
+
+
+{% block body %}
+    {% logged_header 2 %}
+    <div class="container py-5">
+        <div class="row mb-4 mb-lg-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h3 class="fw-bold">Scheda</h3>
+                <button onclick="window.location.href = '{% url 'manage_workouts' %}'">Gestisci schede</button>
+
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center">
+            {% if workoutPlan == None %}
+                <h5 style="text-align: center"> Nessuna scheda disponibile </h5>
+            {% else %}
+
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}

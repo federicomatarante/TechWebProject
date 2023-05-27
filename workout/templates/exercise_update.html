@@ -1,0 +1,31 @@
+{% extends 'exercise_create.html' %}
+{% block  head %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("delete_button").addEventListener("click", function () {
+                var r = confirm("Sei sicuro di voler eliminare l'esercizio?");
+                console.log("Done!");
+                if (r === true) {
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "{% url 'delete_exercise' exercise.id %}", true);
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+
+                    xhr.onload = function () {
+                        if (this.status >= 200 && this.status < 300) {
+                            window.location.href = "{% url 'exercise_list' %}";
+                        }
+                    };
+                    xhr.send();
+                }
+            });
+
+        });
+
+    </script>
+
+{% endblock %}
+{% block header %}Modifica Esercizio{% endblock %}
+{% block buttonText %}Modifica{% endblock %}
+{% block extension %}
+    <button id="delete_button" class="btn btn-dark" style="width: 100px; height: 40px">Elimina</button>
+{% endblock %}

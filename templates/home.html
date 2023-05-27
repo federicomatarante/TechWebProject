@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% logged_header 0 %}
+    {% else %}
+        {% include 'unloggedheader.html' %}
+    {% endif %}
+{% endblock %}

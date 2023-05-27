@@ -1,0 +1,33 @@
+<div class="row row-cols-1 row-cols-md-2 justify-content-center">
+    <div style="display: flex; align-items: baseline; margin: 10px">
+        <input id="search" class="form-control" placeholder="Cerca...">
+        <button type="submit" class="btn btn-primary" style="margin-left: 10px" onclick="search()">Cerca</button>
+    </div>
+    <div>
+        {% for item in items %}
+            <div class="list-group">
+                {% with link as createLink %}
+                    <a href="{{ item.1 }}" class="list-group-item list-group-item-action">{{ item.0 }}</a>
+                {% endwith %}
+            </div>
+        {% endfor %}
+    </div>
+    <div style="justify-content: center; display: flex; margin: 20px">
+        <ul class="pagination" style="align-content: center; margin: 0">
+            <! -------------------- Previous Button ------------------- >
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                </li>
+            {% endif %}
+            <! --------------------------------------------------- >
+            <! ------------------- Next Button ------------------- >
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                </li>
+            {% endif %}
+            <! --------------------------------------------------- >
+        </ul>
+    </div>
+</div>

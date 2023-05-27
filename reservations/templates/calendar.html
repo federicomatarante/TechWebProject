@@ -1,0 +1,170 @@
+{% extends 'loggedbase.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block head %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="{% static 'calendarHandlers.js' %}"></script>
+    <style>
+        .timeline {
+            display: flex;
+            flex-direction: row;
+            overflow-block: scroll;
+            width: 100%;
+            height: 80px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .time-slot {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 80px;
+            background-color: #f2f2f2;
+            font-size: 14px;
+            flex: 0 0 auto;
+        }
+
+        .openDay {
+
+        }
+
+        .closedDay {
+
+        }
+
+        .fullDay {
+
+        }
+
+        .card:hover {
+            box-shadow: #1e2125 0 0 3px 0;
+        }
+
+
+    </style>
+{% endblock %}
+{% block body %}
+    {% logged_header 3 %}
+    <div id="variables" style="display: none" year="{{ calendar.year }}" month="{{ calendar.month }}"></div>
+    <div class="container py-5">
+        <div class="row mb-4 mb-lg-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h3 class="fw-bold">Calendario</h3>
+                <button onclick="window.location.href = '{% url 'openinghours' 0 %}'">Orari di apertura</button>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center text-center d-flex">
+            <div style="width: 100%; overflow-x: auto">
+                <table class="align-self-center"
+                       style="width: 100%; table-layout: fixed">
+                    <! -------------------- Month and Year ------------------- >
+                    <tr>
+                        <th colspan="7">
+                            <h4>
+                                {{ calendar.literalMonth|capfirst }} {{ calendar.year }}
+                            </h4>
+                        </th>
+                    </tr>
+                    <! --------------------------------------------------- >
+                    <! -------------------- Week Days ------------------- >
+                    <tr>
+                        <th>Lun</th>
+                        <th>Mar</th>
+                        <th>Mer</th>
+                        <th>Gio</th>
+                        <th>Ven</th>
+                        <th>Sab</th>
+                        <th>Dom</th>
+                    </tr>
+                    <! --------------------------------------------------- >
+                    <! ----------------------- Days ---------------------- >
+
+                    {% for week in calendar.weeks %}
+                        <tr>
+                            {% if forloop.counter == 1 %}
+                                {% for i in blank_days %}
+                                    <td>
+
+                                    </td>
+                                {% endfor %}
+                            {% endif %}
+                            {% with row_number=forloop.counter %}
+                                {% for day in week %}
+                                    {% if day %}
+                                        <td>
+                                            <div class="card border-primary mb-3 calendar-button"
+                                                 day="{{ day.date.day }}" row="{{ row_number }}"
+                                                 style="margin: 0; padding: 0; width: 10vw; height: 15vh; position: relative;">
+                                                <div class="card-body {% if day.isClosed %}closedDay{% else %}openDay{% endif %}"
+                                                     style="margin: 0; padding: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                    <h3 class="card-text"
+                                                        style="margin: 0; padding: 0;">{{ day.date|date:'d' }}</h3>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <div class="card border-primary mb-3"
+                                                 style="margin: 0; padding: 0; width: 10vw; height: 15vh; position: relative;">
+                                                <div class="card-body {% if day.isClosed %}closedDay{% else %}openDay{% endif %}"
+                                                     style="margin: 0; padding: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                    <h3 class="card-text"
+                                                        style="margin: 0; padding: 0;">{{ day.date|date:'d' }}</h3>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+
+                        </tr>
+                        <tr>
+                            <td colspan="7" style="padding-bottom: 20px;">
+                                <div class="card border-secondary w-100"
+                                     id="day-info-{{ forloop.counter }}"
+                                     style="display: none; width: 100%;">
+                                    <div class="card-header" style="display: flex; align-items: center">
+                                        <h1 style="flex-grow: 1; text-align: center"></h1>
+                                        <a>
+                                            <button style="margin-left: auto;"> Impostazioni</button>
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    <! --------------------------------------------------- >
+                </table>
+
+            </div>
+        </div>
+        <div style="justify-content: center; display: flex; ">
+            <ul class="pagination" style="align-content: center; margin: 0">
+                <! -------------------- Previous Button ------------------- >
+                <li class="page-item">
+                    <a class="page-link" href="?date={{ prev_month }}">&laquo;</a>
+                </li>
+
+                <! --------------------------------------------------- >
+                <! ------------------- Next Button ------------------- >
+
+                <li class="page-item">
+                    <a class="page-link" href="?date={{ next_month }}">&raquo;</a>
+                </li>
+
+                <! --------------------------------------------------- >
+
+            </ul>
+        </div>
+    </div>
+{% endblock %}

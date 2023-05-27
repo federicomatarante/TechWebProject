@@ -1,0 +1,82 @@
+{% extends 'loggedbase.html' %}
+{% load custom_tags %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+    {% logged_header 5 %}
+    <div style="display: flex; align-content: start; align-items: start; width: 100%; margin: 20px">
+        <a href="{% url 'manage_workouts' %}">
+            <button type="button" class="btn btn-outline-dark">Indietro</button>
+        </a>
+    </div>
+    <div class="container py-5">
+        <div class="row mb-4 mb-lg-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h3 class="fw-bold">Crea scheda</h3>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <table>
+                <thead>
+                <tr>
+                    <th style="text-align: center">Esercizio</th>
+                    <th style="text-align: center">Ripetizioni</th>
+                    <th style="text-align: center">Serie</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Prima riga -->
+                <tr>
+                    <td>
+                        <select class="form-select" id="exerciseSelect">
+                            <option>Esercizio 1</option>
+                            <option>Esercizio 2</option>
+                            <option>Esercizio 3</option>
+                            <option>Esercizio 4</option>
+                            <option>Esercizio 5</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input id="reps-input" class="form-control" type="number" min="1" max="100" value="6">
+                    </td>
+                    <td>
+                        <input id="sets-input" class="form-control" type="number" min="1" max="100" value="6">
+                    </td>
+                </tr>
+                <!-- Replicare per le restanti 4 righe -->
+                <!-- Seconda riga -->
+                <tr>
+                    <td>
+                        <select class="form-select" id="exerciseSelect">
+                            <option>Esercizio 1</option>
+                            <option>Esercizio 2</option>
+                            <option>Esercizio 3</option>
+                            <option>Esercizio 4</option>
+                            <option>Esercizio 5</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input id="reps-input" class="form-control" type="number" min="1" max="100" value="6">
+                    </td>
+                    <td>
+                        <input id="sets-input" class="form-control" type="number" min="1" max="100" value="6">
+                    </td>
+                </tr>
+                <!-- Terza riga -->
+                <tr>
+                    <!-- Ripeti per le rimanenti 3 righe -->
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div style="display: flex; justify-content: center">
+            <a href="{% url 'create_exercise' %}">
+                <button class="btn btn-dark">Aggiungi esercizio</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

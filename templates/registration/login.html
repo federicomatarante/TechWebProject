@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'unloggedheader.html' %}
+    <h2>Login</h2>
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+            {{ form.as_p}}
+        <button type="submit">Login</button>
+    </form>
+    {% include 'footer.html' %}
+{% endblock %}

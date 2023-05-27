@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand {% if highlighted_index == 0 %} active{% endif %}"
+                {% if highlighted_index != 0 %} href="{% url 'home' %}{% endif %}">BodyArt</a>
+        <div class="collapse navbar-collapse" style="justify-content: end" id="navbarColor03">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if highlighted_index == 1 %} active {% endif %}"
+                            {% if highlighted_index != 1 %} href="{% url 'bullettinboard' %}{% endif %}">Bacheca</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if highlighted_index == 2 %} active {% endif %}"
+                            {% if highlighted_index != 2 %} href="{% url 'workout' %}{% endif %}">Schede</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if highlighted_index == 3 %} active {% endif %}"
+                            {% if highlighted_index != 3 %} href="{% url 'reservations' %}{% endif %}">Prenotazioni</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if highlighted_index == 4 %} active {% endif %}"
+                            {% if highlighted_index != 4 %} href="{% url 'home' %}{% endif %}">Dieta</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if highlighted_index == 5 %} active {% endif %}"
+                            {% if highlighted_index != 5 %} href="{% url 'home' %}{% endif %}">Profilo</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

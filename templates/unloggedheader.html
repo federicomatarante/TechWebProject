@@ -1,0 +1,10 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand {% if highlighted_index == 0 %} active{% endif %}"
+                {% if highlighted_index != 0 %} href="{% url 'home' %}{% endif %}">BodyArt</a>
+        <div class="collapse navbar-collapse" style="justify-content: end; padding-right: 2vw">
+            <a class="page-link" style="padding-right: 2vw" href={% url 'login' %}>Login</a>
+            <a class="page-link" href={% url 'register' %}>Register</a>
+        </div>
+    </div>
+</nav>

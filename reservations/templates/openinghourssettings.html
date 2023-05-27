@@ -1,0 +1,62 @@
+{% extends 'loggedbase.html' %}
+{% load custom_tags %}
+
+
+{% block content %}
+    {% logged_header 3 %}
+    <div style="display:flex; align-items: center; flex-direction: column; padding: 20px">
+        <div style="display: flex; align-content: start; align-items: start; width: 100%; padding-left: 20px">
+            <a href="{% url 'reservations' %}">
+                <button type="button" class="btn btn-outline-dark"> Indietro </button>
+            </a>
+        </div>
+        <div>
+            <h2>{{ day }}</h2>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; padding: 20px">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row" style="margin-bottom: 10px">
+                    <div class="col">
+                        <label for="id_opening_time">Capacità</label>
+                        {{ form.capacity }}
+                    </div>
+                </div>
+                <div class="row">
+                        {% for choice in form.hours %}
+                            <div class="col-1">
+                                {{ choice.tag }}
+                                {% if forloop.counter < 10 %}
+                                    0{{ choice.choice_label }}:00
+                                {% else %}
+                                    {{ choice.choice_label }}:00
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                <div style="display: flex; justify-content: center; margin: 20px">
+                    <button class="btn btn-light" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+        <div style="justify-content: center; display: flex; ">
+            <ul class="pagination" style="align-content: center; margin: 0">
+                <! -------------------- Previous Button ------------------- >
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'openinghours' prev_day %}">&laquo;</a>
+                </li>
+
+                <! --------------------------------------------------- >
+                <! ------------------- Next Button ------------------- >
+
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'openinghours' next_day %}">&raquo;</a>
+                </li>
+
+                <! --------------------------------------------------- >
+
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
