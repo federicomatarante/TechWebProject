@@ -1,0 +1,58 @@
+<div style="width:800px; margin:0 auto;" id="workoutPlanContent">
+    {% for workoutDay in workoutPlan.workout_days.all %}
+        <div class="row mb-5" style="margin-bottom: 30px">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <div style="display: flex;justify-content: center">
+                    <h5 id="day-title" class="fw-bold ms-1">Giorno {{ forloop.counter }}</h5>
+                </div>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th style="text-align: center" width="33%">Esercizio</th>
+                    <th style="text-align: center" width="33%">Ripetizioni</th>
+                    <th style="text-align: center" width="33%">Serie</th>
+                </tr>
+                </thead>
+                <tbody id="workoutDayTable-1">
+                {% for exercise_set in workoutDay.exercise_sets.all %}
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <input class="form-control" type="text" min="1" max="100"
+                                       value="{{ exercise_set.exercise.name }}" readonly="readonly">
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <input class="form-control" type="text" min="1" max="100"
+                                       value="{{ exercise_set.reps }}" readonly="readonly">
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <input class="form-control" type="text" min="1" max="100"
+                                       value="{{ exercise_set.sets }}" readonly="readonly">
+                            </fieldset>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+    {% endfor %}
+
+    <div class="mt-4 fa-bold" id="workoutExpirationDayContent" style="margin-top: 20px">
+        {% if workoutPlan.actual_end_date %}
+            <label class="form-label">Scaduto</label>
+            <input class="form-control" type="date" readonly="readonly"
+                   value="{{ workoutPlan.actual_end_date|date:'Y-m-d' }}">
+        {% else %}
+            <label class="form-label">Data di scadenza</label>
+            <input class="form-control" type="date" readonly="readonly"
+                   value="{{ workoutPlan.expected_end_date|date:'Y-m-d' }}">
+        {% endif %}
+    </div>
+</div>

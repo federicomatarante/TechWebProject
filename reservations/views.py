@@ -52,9 +52,15 @@ class EditGymDayView(UpdateView):
         return context
 
     def get_context(self, **kwargs):
+        prev_day = self.object.dayOfWeek - 1 if self.object.dayOfWeek > 0 else 6
+        next_day = self.object.dayOfWeek + 1 if self.object.dayOfWeek < 6 else 0
+        prev_day_url = reverse_lazy('openinghours', kwargs={'pk': prev_day})
+        next_day_url = reverse_lazy('openinghours', kwargs={'pk': next_day})
         context = {'day': self._day_to_string(self.object.dayOfWeek),
-                   'prev_day': self.object.dayOfWeek - 1 if self.object.dayOfWeek > 0 else 6,
-                   'next_day': self.object.dayOfWeek + 1 if self.object.dayOfWeek < 6 else 0}
+                   'prev_day_url': prev_day_url,
+                   'next_day_url': next_day_url
+                   }
+
         return context
 
     @staticmethod
@@ -104,9 +110,11 @@ class EditExceptionalGymDayView(EditGymDayView):
     def get_context(self, **kwargs):
         prev_day = self.object.date - timedelta(days=1)
         next_day = self.object.date + timedelta(days=1)
+        prev_day_url = reverse_lazy('openinghours', kwargs={'date': prev_day.strftime('%d-%m-%Y')})
+        next_day_url = reverse_lazy('openinghours', kwargs={'date': next_day.strftime('%d-%m-%Y')})
         context = {'day': f"{self._day_to_string(self.object.date.weekday())} {self.object.date.strftime('%d-%m-%Y')}",
-                   'prev_day': prev_day.strftime('%d-%m-%Y'),
-                   'next_day': next_day.strftime('%d-%m-%Y')}
+                   'prev_day_url': prev_day_url,
+                   'next_day_url': next_day_url}
         return context
 
 
@@ -129,8 +137,8 @@ def get_day_info(request):
 @require_POST
 def make_reservation(
         request):  # TODO fai controlli di ogni tipo ( come quando si modificano le ore di apertura, eliminare le riservazioni che non sono più possibili)
+    # TODO inoltre controlla se il JSOn è giusto
     body = json.loads(request.body)
-    print("Body: ", body)
     year, month, day, hour = body['year'], body['month'], body['day'], body['hour']
     user = request.user
 

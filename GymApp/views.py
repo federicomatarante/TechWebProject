@@ -1,9 +1,11 @@
+import os
+
+from django.http import FileResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from GymApp.forms import UserRegistrationForm
 from GymApp.models import GymUser
-
 
 
 class UserRegistrationView(CreateView):

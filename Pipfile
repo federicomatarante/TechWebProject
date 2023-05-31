@@ -9,6 +9,9 @@ psycopg2-binary = "*"
 pillow = "*"
 django-crispy-forms = "*"
 crispy-bootstrap4 = "*"
+djangorestframework = "*"
+pdfkit = "*"
+wkhtmltopdf = "*"
 
 [dev-packages]
 

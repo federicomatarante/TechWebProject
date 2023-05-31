@@ -27,6 +27,7 @@ urlpatterns = [
     path('bullettinboard', include('bullettinboard.urls')),
     path('reservations/', include('reservations.urls')),
     path('workout/', include('workout.urls')),
+    path('mealplans/', include('mealplans.urls')),
 
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('login/', auth_views.LoginView.as_view(), name='login'),

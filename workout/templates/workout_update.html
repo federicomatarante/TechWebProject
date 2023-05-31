@@ -6,8 +6,9 @@
     <script>
         const exercises = {{ exercises | safe }};
         const userName = "{{ userName }}";
+        const workoutPlan = {{ workoutPlan | safe }};
     </script>
-    <script src="{% static 'createLogic.js' %}"></script>
+    <script src="{% static 'updateLogic.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -20,13 +21,15 @@
     <div class="container py-5">
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
-                <h3 class="fw-bold">Crea scheda</h3>
+                <h3 class="fw-bold">Modifica scheda</h3>
+                <a href="{% url 'user_workout' userName %}"> <button class="btn btn-dark"> Crea nuovo </button></a>
             </div>
         </div>
 
         <div class="mb-4 fa-bold" id="workoutExpirationDayContent">
             <label for="workoutExpirationDayInput" class="form-label">Data di scadenza</label>
-            <input id="workoutExpirationDayInput" class="form-control" type="date">
+            <input id="workoutExpirationDayInput" class="form-control"
+                   type="date">
         </div>
 
         <div id="workoutPlanContent">

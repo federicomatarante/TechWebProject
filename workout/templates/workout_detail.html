@@ -8,17 +8,74 @@
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">Scheda</h3>
+                <a href="{% url 'download_workout' %}?index={{ index }}"><button class="btn btn-dark"> Scarica </button></a>
                 <button onclick="window.location.href = '{% url 'manage_workouts' %}'">Gestisci schede</button>
-
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 justify-content-center">
             {% if workoutPlan == None %}
                 <h5 style="text-align: center"> Nessuna scheda disponibile </h5>
             {% else %}
+                <div id="workoutPlanContent">
+                    {% for workoutDay in workoutPlan.workout_days.all %}
+                        <div class="row mb-5">
+                            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                                <div style="display: flex;justify-content: center">
+                                    <h5 id="day-title" class="fw-bold ms-1">Giorno {{ forloop.counter }}</h5>
+                                </div>
+                            </div>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center" width="33%">Esercizio</th>
+                                    <th style="text-align: center" width="33%">Ripetizioni</th>
+                                    <th style="text-align: center" width="33%">Serie</th>
+                                </tr>
+                                </thead>
+                                <tbody id="workoutDayTable-1">
+                                {% for exercise_set in workoutDay.exercise_sets.all %}
+                                    <tr>
+                                        <td>
+                                            <fieldset>
+                                                <input class="form-control" type="text" min="1" max="100"
+                                                       value="{{ exercise_set.exercise.name }}" readonly="readonly">
+                                            </fieldset>
+                                        </td>
+                                        <td>
+                                            <fieldset>
+                                                <input class="form-control" type="text" min="1" max="100"
+                                                       value="{{ exercise_set.reps }}" readonly="readonly">
+                                            </fieldset>
+                                        </td>
+                                        <td>
+                                            <fieldset>
+                                                <input class="form-control" type="text" min="1" max="100"
+                                                       value="{{ exercise_set.sets }}" readonly="readonly">
+                                            </fieldset>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
 
+                            </table>
+
+                        </div>
+                    {% endfor %}
+                    <div class="mb-4 fa-bold" id="workoutExpirationDayContent">
+                        {% if workoutPlan.actual_end_date %}
+                            <label class="form-label">Scaduto</label>
+                            <input class="form-control" type="date" readonly="readonly"
+                                   value="{{ workoutPlan.actual_end_date|date:'Y-m-d' }}">
+                        {% else %}
+                            <label class="form-label">Data di scadenza</label>
+                            <input class="form-control" type="date" readonly="readonly"
+                                   value="{{ workoutPlan.expected_end_date|date:'Y-m-d' }}">
+                        {% endif %}
+                    </div>
+                </div>
             {% endif %}
         </div>
+        {% page_navigation prev_workout_url next_workout_url %}
 
     </div>
 {% endblock %}

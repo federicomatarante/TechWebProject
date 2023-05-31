@@ -1,28 +1,14 @@
-import random
-import string
+import os
+import tempfile
+from io import BytesIO
 
-from GymApp.models import GymUser
-from bullettinboard.models import Message
-
-
-def create_users():
-    GymUser.objects.all().delete()
-    GymUser(username='admin', password='admin', ).save()
-    GymUser(username='user1', password='user1', ).save()
-    GymUser(username='user2', password='user2', ).save()
-    GymUser(username='user3', password='user3', ).save()
+import pdfkit
+from django.http import FileResponse
 
 
-def create_messages():
-    Message.objects.all().delete()
-
-    for _ in range(100):
-        num_words = random.randint(100, 200)
-        words = []
-        for _ in range(num_words):
-            word = ''.join(random.choice(string.ascii_lowercase) for _ in range(random.randint(1, 10)))
-            words.append(word)
-        sentence = ' '.join(words)
-        Message(text=sentence, author=GymUser.objects.get(username='admin')).save()
-
-
+def send_pdf(html_content, file_name):
+    pdf_data = pdfkit.from_string(html_content, False)
+    buffer = BytesIO(pdf_data)
+    response = FileResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{file_name}.pdf"'
+    return response

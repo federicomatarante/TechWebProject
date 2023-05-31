@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     # APPS
     'GymApp',
     'bullettinboard',
-    # 'mealplans',
+    'mealplans',
     'reservations',
     'workout',
 
