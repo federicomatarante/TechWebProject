@@ -91,7 +91,6 @@ class EditExceptionalGymDayView(EditGymDayView):
 
     def get_object(self, queryset=None):
         date_param = self.kwargs.get('date')
-        print(date_param)
         day, month, year = date_param.split('-')
         my_date = date(year=int(year), month=int(month), day=int(day))
         try:
@@ -129,7 +128,6 @@ def get_day_info(request):
         'fullHours': calendarDay.fullHours,
         'reservations': calendarDay.getReservations(user),
     }
-    print("Data: ", data)
     # Return the dictionary as a JSON response
     return JsonResponse(data)
 
@@ -153,7 +151,6 @@ def make_reservation(
 @require_POST
 def delete_reservation(request):
     body = json.loads(request.body)
-    print("Body: ", body)
     year, month, day, hour = body['year'], body['month'], body['day'], body['hour']
     user = request.user
 

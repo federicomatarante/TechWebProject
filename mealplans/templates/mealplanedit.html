@@ -4,43 +4,41 @@
 
 {% block head %}
     <script>
-        const exercises = {{ exercises | safe }};
         const userName = "{{ userName }}";
-        const workoutPlan = {{ workoutPlan | safe }};
+        const mealPlan = {{ mealPlan|safe }};
     </script>
-    <script src="{% static 'updateLogic.js' %}"></script>
+    <script src="{% static 'mealPlanEditLogic.js' %}"></script>
 {% endblock %}
 
 {% block body %}
-    {% logged_header request -1 %}
+    {% logged_header request 5 %}
     <div style="display: flex; align-content: start; align-items: start; width: 100%; margin: 20px">
-        <a href="{% url 'manage_workouts' %}">
+        <a href="{% url 'manage_mealplans' %}">
             <button type="button" class="btn btn-outline-dark">Indietro</button>
         </a>
     </div>
     <div class="container py-5">
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
-                <h3 class="fw-bold">Modifica scheda</h3>
-                <a href="{% url 'user_workout' userName %}"> <button class="btn btn-dark"> Crea nuovo </button></a>
+                <h3 class="fw-bold">Modifica dieta</h3>
+                <a href="{% url 'create_mealplan' userName %}"> <button class="btn btn-dark"> Crea nuovo </button></a>
             </div>
         </div>
 
         <div class="mb-4 fa-bold" id="workoutExpirationDayContent">
-            <label for="workoutExpirationDayInput" class="form-label">Data di scadenza</label>
-            <input id="workoutExpirationDayInput" class="form-control"
-                   type="date">
+            <label for="expirationDayInput" class="form-label">Data di scadenza</label>
+            <input id="expirationDayInput" class="form-control" type="date">
         </div>
 
-        <div id="workoutPlanContent">
+        <div id="mealPlanContent">
         </div>
         <div class="row mb-5">
             <button id="addDayButton" class="btn btn-outline-secondary" style="color: #2e3436">Aggiungi giorno</button>
         </div>
 
-        <div style="display: flex; justify-content: center; padding-bottom: 5rem" >
+        <div style="display: flex; justify-content: center">
             <a>
-                <button id="saveWorkoutButton" class="btn btn-dark">Salva</button>
+                <button id="saveMealPlanButton" class="btn btn-dark">Salva</button>
             </a>
         </div>
     </div>

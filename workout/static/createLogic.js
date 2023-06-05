@@ -122,17 +122,44 @@ function getCookie(name) {
     return null;
 }
 
+function containsOnlyDigits(str) {
+    return str.match(/^[0-9]+$/) !== null;
+}
+
 function saveWorkout() {
     let workoutPlanContent = document.getElementById("workoutPlanContent");
     let days = [];
+    if (workoutPlanContent.childElementCount === 0) {
+        alert("Inserisci almeno un giorno");
+        return;
+    }
+
+    if (document.getElementById("workoutExpirationDayInput").value === "") {
+        alert("Inserisci una data di scadenza");
+        return;
+    }
+
+
     for (let day_number = 1; day_number < workoutPlanContent.childElementCount + 1; day_number++) {
         let exercise_rows = document.getElementById("workoutDayTable-" + day_number).children;
+        if (exercise_rows.length === 1) {
+            alert("Inserisci almeno un esercizio per ogni giorno");
+            return;
+        }
         let exercises = [];
         for (let j = 0; j < exercise_rows.length - 1; j++) {
             let exercise_row = exercise_rows[j];
             let exercise = exercise_row.querySelector("#exerciseSelect").value;
             let reps = exercise_row.querySelector("#reps-input").value;
+            if (!containsOnlyDigits(reps)) {
+                alert("Inserisci un numero di ripetizioni valido");
+                return;
+            }
             let sets = exercise_row.querySelector("#sets-input").value;
+            if (!containsOnlyDigits(sets)) {
+                alert("Inserisci un numero di serie valido");
+                return;
+            }
             exercises.push({
                 exercise: parseInt(exercise),
                 reps: parseInt(reps),
@@ -157,7 +184,7 @@ function saveWorkout() {
     xhr.send(JSON.stringify(workoutPlan));
     xhr.onload = function () {
         if (xhr.status === 200) {
-            window.location.href = "/workout/manage/" ;
+            window.location.href = "/workout/manage/";
         } else {
             alert("Errore durante il salvataggio del piano di allenamento");
         }

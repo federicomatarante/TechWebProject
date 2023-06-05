@@ -28,18 +28,6 @@
             flex: 0 0 auto;
         }
 
-        .openDay {
-
-        }
-
-        .closedDay {
-
-        }
-
-        .fullDay {
-
-        }
-
         .card:hover {
             box-shadow: #1e2125 0 0 3px 0;
         }
@@ -48,13 +36,13 @@
     </style>
 {% endblock %}
 {% block body %}
-    {% logged_header 3 %}
+    {% logged_header request 3 %}
     <div id="variables" style="display: none" year="{{ calendar.year }}" month="{{ calendar.month }}"></div>
     <div class="container py-5">
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">Calendario</h3>
-                <button onclick="window.location.href = '{% url 'openinghours' 0 %}'">Orari di apertura</button>
+                <button class="btn btn-dark" onclick="window.location.href = '{% url 'openinghours' 0 %}'">Orari di apertura</button>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 justify-content-center text-center d-flex">
@@ -132,11 +120,10 @@
                                     <div class="card-header" style="display: flex; align-items: center">
                                         <h1 style="flex-grow: 1; text-align: center"></h1>
                                         <a>
-                                            <button style="margin-left: auto;"> Impostazioni</button>
+                                            <button class="btn btn-outline-dark" style="margin-left: auto;"> Impostazioni</button>
                                         </a>
                                     </div>
                                     <div class="card-body">
-
                                     </div>
                                 </div>
                             </td>

@@ -3,13 +3,14 @@
 
 
 {% block body %}
-    {% logged_header 2 %}
-    <div class="container py-5">
+    {% logged_header request 2 %}
+    <div class="container py-5" style="margin-bottom: 5rem">
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">Scheda</h3>
-                <a href="{% url 'download_workout' %}?index={{ index }}"><button class="btn btn-dark"> Scarica </button></a>
-                <button onclick="window.location.href = '{% url 'manage_workouts' %}'">Gestisci schede</button>
+                <div style="display: flex; justify-content: space-between"></div>
+                <a href="{% url 'download_workout' %}?index={{ index }}"><button style="flex-grow: 1; width: 30%" class="btn btn-dark"> Scarica </button></a>
+                <button style="flex-grow: 1; width: 30%" class="btn btn-dark" onclick="window.location.href = '{% url 'manage_workouts' %}'">Gestisci schede</button>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 justify-content-center">
@@ -64,12 +65,12 @@
                     <div class="mb-4 fa-bold" id="workoutExpirationDayContent">
                         {% if workoutPlan.actual_end_date %}
                             <label class="form-label">Scaduto</label>
-                            <input class="form-control" type="date" readonly="readonly"
-                                   value="{{ workoutPlan.actual_end_date|date:'Y-m-d' }}">
+                            <input class="form-control" type="text" readonly="readonly"
+                                   value="{{ workoutPlan.actual_end_date|date:"l d F Y" }}">
                         {% else %}
                             <label class="form-label">Data di scadenza</label>
-                            <input class="form-control" type="date" readonly="readonly"
-                                   value="{{ workoutPlan.expected_end_date|date:'Y-m-d' }}">
+                            <input class="form-control" type="text" readonly="readonly"
+                                   value="{{ workoutPlan.expected_end_date|date:"l d F Y" }}">
                         {% endif %}
                     </div>
                 </div>

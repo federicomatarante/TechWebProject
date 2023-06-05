@@ -89,6 +89,7 @@ async function generateDayInfo(day) {
         slot.classList = ['time-slot'];
         slot.textContent = timeSlot < 10 ? "0" + timeSlot + ":00" : timeSlot + ":00";
         if (openHours.includes(timeSlot)) {
+            slot.title = "Clicca per prenotare"
             slot.style.backgroundColor = "green";
             button.onclick = function () {
                 makeReservation(parseInt(day), parseInt(timeSlot)).then(async () => {
@@ -100,12 +101,15 @@ async function generateDayInfo(day) {
                 })
             }
         } else {
+            slot.title = "Palestra chiusa!"
             slot.style.backgroundColor = "red";
         }
         if (fullHours.includes(timeSlot)) {
+            slot.title = "Palestra piena!"
             slot.style.backgroundColor = "orange";
         }
         if (reservations.includes(timeSlot)) {
+            slot.title = "Clicca per cancellare la prenotazione"
             slot.style.backgroundColor = "blue";
             button.onclick = function () {
                 deleteReservation(parseInt(day), parseInt(timeSlot)).then(async () => {

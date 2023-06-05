@@ -8,25 +8,24 @@
             let input = document.getElementById('search').value;
             console.log(input);
             window.location.href = "{% url 'manage_workouts' %}" + "?search=" + input;
+
         }
     </script>
 {% endblock %}
 
 {% block body %}
-    {% logged_header request -1 %}
+    {% logged_header request 1 %}
     <div style="display: flex; align-content: start; align-items: start; width: 100%; margin: 20px">
-        <a href="{% url 'workout' %}">
+        <a href="{% url 'meaplan' %}">
             <button type="button" class="btn btn-outline-dark"> Indietro </button>
         </a>
     </div>
-    <div class="container py-5" >
-
+    <div class="container py-5">
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
-                <h3 class="fw-bold">Gestisci schede</h3>
-                <button class="btn btn-dark" onclick="window.location.href = '{% url 'exercise_list'  %}'"> Modifica esercizi</button>
+                <h3 class="fw-bold">Gestisci diete</h3>
             </div>
         </div>
-        <div style="padding-bottom: 5rem"> {{ search }} </div>
+        <div> {{ search }} </div>
     </div>
 {% endblock %}

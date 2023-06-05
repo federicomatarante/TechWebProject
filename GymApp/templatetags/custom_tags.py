@@ -5,10 +5,11 @@ register = t.Library()
 
 
 @register.simple_tag()
-def logged_header(highlighted_index: int):
+def logged_header(request, highlighted_index: int):
     template = get_template('loggedheader.html')
     context = {
-        'highlighted_index': highlighted_index
+        'highlighted_index': highlighted_index,
+        'user': request.user
     }
     return template.render(context)
 

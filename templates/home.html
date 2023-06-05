@@ -3,7 +3,7 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        {% logged_header 0 %}
+        {% logged_header request 0 %}
     {% else %}
         {% include 'unloggedheader.html' %}
     {% endif %}

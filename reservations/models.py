@@ -4,27 +4,12 @@ from datetime import date
 from itertools import groupby
 from typing import List
 
-from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from GymApp.models import GymUser
+from GymApp.utils import WeekDay
 from reservations.fields import IntegerListField
-
-
-class WeekDay(models.TextChoices):
-    MONDAY = 0
-    TUESDAY = 1
-    WEDNESDAY = 2
-    THURSDAY = 3
-    FRIDAY = 4
-    SATURDAY = 5
-    SUNDAY = 6
-
-    @staticmethod
-    def fromDate(date: date) -> 'WeekDay':
-        weekDay = date.weekday()
-        return WeekDay.choices[weekDay]
 
 
 class GymDay(models.Model):

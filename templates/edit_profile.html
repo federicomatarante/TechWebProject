@@ -1,0 +1,31 @@
+{% extends 'loggedbase.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+{% load crispy_forms_filters %}
+{% load custom_tags %}
+
+
+{% block body %}
+    {% logged_header request 5 %}
+    <div style="display: flex; align-content: start; align-items: start; width: 100%; margin: 20px">
+        <a href="{% url 'profile' %}">
+            <button type="button" class="btn btn-outline-dark">Indietro</button>
+        </a>
+    </div>
+    <div class="container py-5">
+        <div class="row mb-4 mb-lg-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h3 class="fw-bold">Profilo</h3>
+            </div>
+        </div>
+        <div class="container justify-content-center">
+            <form method='post' enctype="multipart/form-data">{% csrf_token %}
+                {{ form|crispy }}
+                <div style="display: flex; justify-content: center; margin-top: 10px">
+                    <input type='submit' value='Salva' class='btn btn-dark'>
+                </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

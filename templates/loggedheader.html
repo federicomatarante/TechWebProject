@@ -1,3 +1,4 @@
+{% load admin_urls %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand {% if highlighted_index == 0 %} active{% endif %}"
@@ -18,12 +19,18 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if highlighted_index == 4 %} active {% endif %}"
-                            {% if highlighted_index != 4 %} href="{% url 'home' %}{% endif %}">Dieta</a>
+                            {% if highlighted_index != 4 %} href="{% url 'meaplan' %}{% endif %}">Dieta</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if highlighted_index == 5 %} active {% endif %}"
-                            {% if highlighted_index != 5 %} href="{% url 'home' %}{% endif %}">Profilo</a>
+                            {% if highlighted_index != 5 %} href="{% url 'profile' %}{% endif %}">Profilo</a>
                 </li>
+                {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if highlighted_index == 6 %} active {% endif %}"
+                                {% if highlighted_index != 6 %} href="{% url 'admin:index' %}{% endif %}">Admin</a>
+                    </li>
+                {% endif %}
 
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Logout</a>

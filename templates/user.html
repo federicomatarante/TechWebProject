@@ -1,0 +1,76 @@
+{% extends 'loggedbase.html' %}
+{% load custom_tags %}
+
+
+{% block body %}
+    {% logged_header request 5 %}
+    <div class="container py-5">
+        <div class="row mb-4 mb-lg-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h3 class="fw-bold">Profilo</h3>
+            </div>
+        </div>
+        <div class="container justify-content-center">
+            <div class="row mb-3">
+                <div class="col">
+                    <h5 style="text-align: center"> Username </h5>
+                    <input class="form-control" type="text" readonly="readonly"
+                           value="{{ user.username }}">
+                </div>
+                <div class="col">
+                    <h5 style="text-align: center"> Email </h5>
+                    <input class="form-control" type="text" readonly="readonly"
+                           value="{{ user.email }}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <h5 style="text-align: center"> Nome </h5>
+                    <input class="form-control" type="text" readonly="readonly"
+                           value="{{ user.first_name }}">
+                </div>
+                <div class="col">
+                    <h5 style="text-align: center"> Cognome </h5>
+                    <input class="form-control" type="text" readonly="readonly"
+                           value="{{ user.last_name }}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <h5 style="text-align: center"> Peso </h5>
+                    <input class="form-control" type="text" readonly="readonly"
+                           value="{% if user.weight %}{{ user.weight }}{% else %}//{% endif %}">
+                </div>
+                <div class="col">
+                    <h5 style="text-align: center"> Altezza </h5>
+                    <input class="form-control" type="text" readonly="readonly"
+                           value="{% if user.height %}{{ user.height }}{% else %}//{% endif %}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <h5 style="text-align: center"> Data di nascita </h5>
+                    <input class="form-control" type="text" readonly="readonly"
+                           value="{% if user.date_of_birth %}{{ user.date_of_birth }}{% else %}//{% endif %}">
+                </div>
+            </div>
+
+            {% if user.picture %}
+                <div class="row mb-3">
+                    <div class="col">
+                        <h5 style="text-align: center"> Foto profilo </h5>
+                        <div style="display: flex; justify-content: center">
+                            <img src="{{ user.picture.url }}" alt="{{ user.picture.url }}" style="width: 150px">
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row mb-3 col">
+                <a style="display:flex;justify-content: center;" href="{% url 'profile_edit' %}">
+                    <button class="btn btn-dark">Modifica</button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

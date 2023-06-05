@@ -5,8 +5,16 @@ Da fare:
 - Statistiche
 - Protezione dei dati ( non eliminare se usati )
 - Rendere i dati più utili ( ad es la descrizione o foto di esercizi )
+- Debug
+- Controllare input ovunque
+- Abbellire login
+- Abbellire registrazione
+- Aggiusta dettagli grafici
+- Controlla i todo in giro per il codice
 
 Opzionali ma fighe:
+- Codice piu utilizzabile ( evita cloni )
 - Sistema mail automatiche
 - Chat
 - Pagina 404 personalizzata
+- Auto-compila cibi quando crei dieta

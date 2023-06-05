@@ -85,7 +85,7 @@ function getWorkoutDayTemplate(day_number, exercise_rows_list) {
 
 function addDay() {
     let day_number = document.getElementById("workoutPlanContent").childElementCount + 1;
-    if(day_number === 0 || day_number === undefined || day_number === null){
+    if (day_number === 0 || day_number === undefined || day_number === null) {
         day_number = 1;
     }
     let exercise_rows = [getExerciseRow(exercises)];
@@ -125,17 +125,50 @@ function getCookie(name) {
     return null;
 }
 
+
+function containsOnlyDigits(str) {
+    return str.match(/^[0-9]+$/) !== null;
+}
+
 function updateWorkout() {
     let workoutPlanContent = document.getElementById("workoutPlanContent");
     let days = [];
+    if (workoutPlanContent.childElementCount === 0) {
+        alert("Inserisci almeno un giorno");
+        return;
+    }
+
+    if (document.getElementById("workoutExpirationDayInput").value === "") {
+        alert("Inserisci una data di scadenza");
+        return;
+    }
+
+    if (document.getElementById("workoutExpirationDayInput").value < new Date().toISOString().split('T')[0]) {
+        alert("Inserisci una data di scadenza valida");
+        return;
+    }
+
+
     for (let day_number = 1; day_number < workoutPlanContent.childElementCount + 1; day_number++) {
         let exercise_rows = document.getElementById("workoutDayTable-" + day_number).children;
+        if (exercise_rows.length === 1) {
+            alert("Inserisci almeno un esercizio per ogni giorno");
+            return;
+        }
         let exercises = [];
         for (let j = 0; j < exercise_rows.length - 1; j++) {
             let exercise_row = exercise_rows[j];
             let exercise = exercise_row.querySelector("#exerciseSelect").value;
             let reps = exercise_row.querySelector("#reps-input").value;
+            if (!containsOnlyDigits(reps)) {
+                alert("Inserisci un numero di ripetizioni valido");
+                return;
+            }
             let sets = exercise_row.querySelector("#sets-input").value;
+            if (!containsOnlyDigits(sets)) {
+                alert("Inserisci un numero di serie valido");
+                return;
+            }
             exercises.push({
                 exercise: parseInt(exercise),
                 reps: parseInt(reps),
@@ -148,8 +181,8 @@ function updateWorkout() {
         });
     }
     let workoutPlanJson = {
-        "id": workoutPlan['id'],
         "days": days,
+        "id": workoutPlan['id'],
         "expirationDay": document.getElementById("workoutExpirationDayInput").value
     };
     let token = getCookie('csrftoken');
@@ -158,7 +191,6 @@ function updateWorkout() {
     xhr.open("POST", "/workout/manage/saveWorkout/" + userName, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('X-CSRFToken', token);
-    xhr.send(JSON.stringify(workoutPlanJson));
     xhr.onload = function () {
         if (xhr.status === 200) {
             window.location.href = "/workout/manage/";
@@ -166,11 +198,11 @@ function updateWorkout() {
             alert("Errore durante il salvataggio del piano di allenamento");
         }
     }
+    xhr.send(JSON.stringify(workoutPlanJson));
 
 }
 
 function initWorkout() {
-
     let day_number = 1;
     let exercise_rows = [getExerciseRow(exercises)];
     workoutPlan["days"].forEach(function (day) {

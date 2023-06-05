@@ -15,5 +15,6 @@ urlpatterns = [
     path('manage/updateWorkout/<str:userName>', UpdateWorkoutView.as_view(), name='update_workout_view'),
     path('manage/saveWorkout/<str:userName>', save_workout, name='save_workout'),
     path('manage/downloadWorkout/', download_workout, name='download_workout'),
+
 ]
 

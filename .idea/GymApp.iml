@@ -28,6 +28,7 @@
         <option value="$MODULE_DIR$/workout/templates" />
         <option value="$MODULE_DIR$/reservations/templates" />
         <option value="$MODULE_DIR$/bullettinboard/templates" />
+        <option value="$MODULE_DIR$/mealplans/templates" />
       </list>
     </option>
   </component>

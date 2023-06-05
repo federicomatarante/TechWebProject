@@ -1,0 +1,77 @@
+{% extends 'loggedbase.html' %}
+{% load custom_tags %}
+
+
+{% block body %}
+    {% logged_header request 1 %}
+    <div class="container py-5">
+        <div class="row mb-4 mb-lg-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h3 class="fw-bold">Dieta</h3>
+                <a href="{% url 'download_mealPlan' %}?index={{ index }}">
+                    <button class="btn btn-dark">Scarica</button>
+                </a>
+                <button onclick="window.location.href = '{% url 'manage_mealplans' %}'">Gestisci diete</button>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center">
+            {% if mealplan == None %}
+                <h5 style="text-align: center"> Nessuna dieta disponibile </h5>
+            {% else %}
+                <div>
+                    {% for day in mealplan.mealDays.all %}
+                        <div id="day" class="row mb-5">
+                            <div id="dayTitle" class="col-md-8 col-xl-6 text-center mx-auto"
+                                 style="display: flex;justify-content: center">
+                                <h5 class="fw-bold ms-1">Giorno {{ day.day }}</h5>
+                            </div>
+
+                            {% for meal in day.meals.all %}
+                                <table id="meal" class="mb-4">
+                                    <tbody>
+                                    <tr>
+                                        <td class="col-md-8 col-xl-6 text-center mx-auto" colspan="3">
+                                            <input class="form-control shadow-sm text-lg-center text-bg-dark"
+                                                   type="text" value="{{ meal.name }}" readonly="readonly">
+                                        </td>
+                                    </tr>
+                                    {% for ingredient in meal.ingredients.all %}
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" type="text" value="{{ ingredient.name }}"
+                                                       readonly="readonly">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" type="text"
+                                                       value="{{ ingredient.quantity }}" readonly="readonly">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" type="text"
+                                                       value="{{ ingredient.quantityType }}" readonly="readonly">
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <div>
+                        {% if mealplan.actual_end_date %}
+
+                            <h5 style="text-align: center"> Scaduto </h5>
+                            <input class="form-control" type="text" readonly="readonly"
+                                   value="{{ mealplan.actual_end_date|date:"l d F Y" }}">
+                        {% else %}
+                            <h5 style="text-align: center"> Data di scadenza </h5>
+                            <input class="form-control" type="text" readonly="readonly"
+                                   value="{{ mealplan.expected_end_date|date:"l d F Y" }}">
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% page_navigation prev_mealplan_url next_mealplan_url %}
+
+    </div>
+{% endblock %}

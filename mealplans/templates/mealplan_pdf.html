@@ -1,0 +1,46 @@
+
+<div>
+    {% for day in mealplan.mealDays.all %}
+        <div id="day" class="row mb-5">
+            <div id="dayTitle" class="col-md-8 col-xl-6 text-center mx-auto"
+                 style="display: flex;justify-content: center">
+                <h5 class="fw-bold ms-1">Giorno {{ day.day }}</h5>
+            </div>
+
+            {% for meal in day.meals.all %}
+                <table id="meal" class="mb-4">
+                    <tbody>
+                    <tr>
+                        <td class="col-md-8 col-xl-6 text-center mx-auto" colspan="3">
+                            <input class="form-control shadow-sm text-lg-center text-bg-dark" type="text"
+                                   value="{{ meal.name }}" readonly="readonly">
+                        </td>
+                    </tr>
+                    {% for ingredient in meal.ingredients.all %}
+                        <tr>
+                            <td>
+                                <input class="form-control" type="text" value="{{ ingredient.name }}"
+                                       readonly="readonly">
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" value="{{ ingredient.quantity }}"
+                                       readonly="readonly">
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" value="{{ ingredient.quantityType }}"
+                                       readonly="readonly">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <div>
+        <h5 style="text-align: center"> Data di scadenza </h5>
+        <input class="form-control" type="text" readonly="readonly"
+               value="{{ mealplan.expected_end_date|date:"l d F Y" }}">
+    </div>
+</div>

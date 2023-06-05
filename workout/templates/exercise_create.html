@@ -3,13 +3,13 @@
 {% load custom_tags %}
 
 {% block body %}
-    {% logged_header 5 %}
+    {% logged_header request -1 %}
     <div style="display: flex; align-content: start; align-items: start; width: 100%; margin: 20px">
         <a href="{% url 'exercise_list' %}">
             <button type="button" class="btn btn-outline-dark">Indietro</button>
         </a>
     </div>
-    <div class="container py-5">
+    <div class="container py-5" style="margin-bottom: 5rem">
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">{% block header %}Crea esercizio{% endblock %}</h3>
@@ -25,8 +25,6 @@
         <div style="display: flex; justify-content: center; align-items: center; align-content: center; margin-top: 20px;">
             {% block extension %} {% endblock %}
         </div>
-
-
     </div>
 
 
