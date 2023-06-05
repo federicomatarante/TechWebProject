@@ -6,8 +6,14 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView
 
 from GymApp.forms import UserRegistrationForm
-from GymApp.models import GymUser
+from GymApp.models import GymUser, Mail
 from GymApp.settings import MEDIA_ROOT
+
+class HomePageView(CreateView):
+    model = Mail
+    fields = '__all__'
+    template_name = 'home.html'
+    success_url = reverse_lazy('home')
 
 
 class UserRegistrationView(CreateView):
