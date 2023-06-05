@@ -1,6 +1,8 @@
 import json
 from datetime import date, timedelta
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
@@ -10,10 +12,12 @@ from reservations.forms import GymDay, GymDayForm, ExceptionalGymDayForm
 from reservations.models import Calendar, GymDay, ExceptionalGymDay
 
 
-class CalendarView(TemplateView):
+class CalendarView(LoginRequiredMixin, TemplateView):
     template_name = 'calendar.html'
 
     def get_context_data(self, **kwargs):
+        user = self.request.user
+        print("Notifications workout: ", user.notifications.workout)
         context = super().get_context_data(**kwargs)
         # Parameter: date=2023-5
         if self.request.GET.get('date'):
@@ -30,7 +34,7 @@ class CalendarView(TemplateView):
         return context
 
 
-class EditGymDayView(UpdateView):
+class EditGymDayView(LoginRequiredMixin, UpdateView):
     model = GymDay
     template_name = 'openinghourssettings.html'
     form_class = GymDayForm
@@ -118,6 +122,7 @@ class EditExceptionalGymDayView(EditGymDayView):
 
 
 @require_GET
+@login_required
 def get_day_info(request):
     year, month, day = int(request.GET['year']), int(request.GET['month']), int(request.GET['day'])
     calendarDay = Calendar.getCalendar(year, month).getDay(day)
@@ -133,6 +138,7 @@ def get_day_info(request):
 
 
 @require_POST
+@login_required
 def make_reservation(
         request):  # TODO fai controlli di ogni tipo ( come quando si modificano le ore di apertura, eliminare le riservazioni che non sono più possibili)
     # TODO inoltre controlla se il JSOn è giusto
@@ -149,6 +155,7 @@ def make_reservation(
 
 
 @require_POST
+@login_required
 def delete_reservation(request):
     body = json.loads(request.body)
     year, month, day, hour = body['year'], body['month'], body['day'], body['hour']

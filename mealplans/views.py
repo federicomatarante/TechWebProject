@@ -4,19 +4,21 @@ from json import JSONDecodeError
 from pprint import pprint
 from typing import Union
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import DetailView, TemplateView
 
-from GymApp.models import GymUser
+from GymApp.models import GymUser, Notifications
 from GymApp.utils import send_pdf, _get_or_error
 from base_views import SearchListView
 from mealplans.models import MealPlan, Meal, Ingredient, MealDay
 
 
-class UserMealPlanView(DetailView):
+class UserMealPlanView(LoginRequiredMixin, DetailView):
     model = MealPlan
     template_name = 'usermealplan.html'
     context_object_name = 'mealplan'
@@ -30,6 +32,7 @@ class UserMealPlanView(DetailView):
             return None
 
     def get_context_data(self, **kwargs):
+        Notifications.objects.filter(pk=self.request.user.notifications.pk).update(mealplan=False)
         context = super().get_context_data(**kwargs)
         if self.get_object() is None:
             return context
@@ -41,7 +44,7 @@ class UserMealPlanView(DetailView):
         return context
 
 
-class ManageMealPlansView(SearchListView):
+class ManageMealPlansView(LoginRequiredMixin, SearchListView):
     template_name = 'manage_mealplans.html'
 
     def __init__(self):
@@ -56,14 +59,15 @@ class ManageMealPlansView(SearchListView):
         return reverse_lazy('create_mealplan', kwargs={'userName': obj.username})
 
     def get_name(self, obj) -> str:
-        return obj.username
+        return (obj.first_name + ' ' + obj.last_name) if (obj.first_name and obj.last_name) else obj.username
 
 
-class EditMealPlanView(TemplateView):
+class EditMealPlanView(LoginRequiredMixin, TemplateView):
     template_name = 'mealplanedit.html'
 
     def get_object(self):
-        return MealPlan.objects.filter(user=self.request.user).order_by('-creation_date').first()
+        user = GymUser.objects.get(username=self.kwargs['userName'])
+        return MealPlan.objects.filter(user=user).order_by('-creation_date').first()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -94,7 +98,7 @@ class EditMealPlanView(TemplateView):
         return context
 
 
-class CreateMealPlanView(TemplateView):
+class CreateMealPlanView(LoginRequiredMixin, TemplateView):
     template_name = 'mealplancreate.html'
 
     def get_context_data(self, **kwargs):
@@ -105,6 +109,7 @@ class CreateMealPlanView(TemplateView):
 
 
 @require_POST
+@login_required
 def save_mealPlan(request, userName):
     try:
         body = json.loads(request.body)
@@ -138,6 +143,8 @@ def save_mealPlan(request, userName):
                     ingredient = Ingredient(name=ingredient_name, quantity=ingredient_quantity,
                                             quantityType=ingredient_unit, meal=meal)
                     ingredient.save()
+        user.notifications.mealplan = True
+        user.notifications.save()
     except JSONDecodeError:
         return HttpResponse(status=400, content='Invalid JSON')
     except ValueError:
@@ -149,6 +156,7 @@ def save_mealPlan(request, userName):
 
 
 @require_GET
+@login_required
 def download_mealPlan(request):
     index = int(request.GET.get('index')) if request.GET.get('index') else 0
     mealPlan = MealPlan.objects.filter(user=request.user).order_by('-creation_date')[index]

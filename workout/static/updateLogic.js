@@ -6,8 +6,21 @@ function remove(element) {
     element.parentNode.removeChild(element);
 }
 
-function getExerciseRow(exercises, index) {
+function getExerciseRow(exercises, exercise_obj) {
+    if(exercise_obj === undefined){
+        exercise_obj = {
+            "exercise": Object.keys(exercises)[0],
+            "reps": 6,
+            "sets": 6
+        }
+    }
+    let index = exercise_obj["exercise"];
+    let reps = exercise_obj["reps"];
+    let sets = exercise_obj["sets"];
     let exercise_string = Object.keys(exercises).map((id) => {
+        if (index == id) {
+            return `<option value="${id}" selected>${exercises[id]}</option>`;
+        }
         return `<option value="${id}">${exercises[id]}</option>`;
     });
     exercise_string = exercise_string.join("");
@@ -18,7 +31,10 @@ function getExerciseRow(exercises, index) {
     }
 
     let data = {
+        exercise_value: exercises[index],
         exercises: exercise_string,
+        reps: reps,
+        sets: sets
     }
 
     let body = `
@@ -29,10 +45,10 @@ function getExerciseRow(exercises, index) {
                 </select>
             </td>
             <td>
-                <input id="reps-input" class="form-control" type="number" min="1" max="100" value="6">
+                <input id="reps-input" class="form-control" type="number" min="1" max="100" value="{{reps}}">
             </td>
             <td>
-                <input id="sets-input" class="form-control" type="number" min="1" max="100" value="6">
+                <input id="sets-input" class="form-control" type="number" min="1" max="100" value="{{sets}}">
             </td>
             <td>
                 <div style="display: flex; justify-content: center">
@@ -207,8 +223,8 @@ function initWorkout() {
     let exercise_rows = [getExerciseRow(exercises)];
     workoutPlan["days"].forEach(function (day) {
         let exercise_rows = [];
-        day["exercises"].forEach(function (exercise) {
-            exercise_rows.push(getExerciseRow(exercises, exercise));
+        day["exercises"].forEach(function (exercise_obj) {
+            exercise_rows.push(getExerciseRow(exercises, exercise_obj));
         });
         let day_template = getWorkoutDayTemplate(day_number, exercise_rows);
         let dayDiv = document.createElement("div");

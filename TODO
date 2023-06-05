@@ -1,15 +1,8 @@
 Da fare:
-- Sistema notifiche
 - Protezione risorse con gruppi e permessi
 - Pagina di gestione admin
-- Statistiche
-- Protezione dei dati ( non eliminare se usati )
-- Rendere i dati più utili ( ad es la descrizione o foto di esercizi )
+- Rendere i dati più utili ( ad es la descrizione di esercizi )
 - Debug
-- Controllare input ovunque
-- Abbellire login
-- Abbellire registrazione
-- Aggiusta dettagli grafici
 - Controlla i todo in giro per il codice
 
 Opzionali ma fighe:
@@ -18,3 +11,5 @@ Opzionali ma fighe:
 - Chat
 - Pagina 404 personalizzata
 - Auto-compila cibi quando crei dieta
+- Far creare account solo da admin
+- Sistema file scaricabili

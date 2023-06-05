@@ -3,15 +3,16 @@
 
 
 {% block body %}
-    {% logged_header request 1 %}
+    {% logged_header request 4 %}
     <div class="container py-5">
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">Dieta</h3>
                 <a href="{% url 'download_mealPlan' %}?index={{ index }}">
-                    <button class="btn btn-dark">Scarica</button>
-                </a>
-                <button onclick="window.location.href = '{% url 'manage_mealplans' %}'">Gestisci diete</button>
+                    <button class="btn btn-dark" style="width: 30%">Scarica</button></a>
+                <button class="btn btn-dark" style="width: 30%"
+                        onclick="window.location.href = '{% url 'manage_mealplans' %}'">Gestisci diete
+                </button>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 justify-content-center">
@@ -58,7 +59,6 @@
                     {% endfor %}
                     <div>
                         {% if mealplan.actual_end_date %}
-
                             <h5 style="text-align: center"> Scaduto </h5>
                             <input class="form-control" type="text" readonly="readonly"
                                    value="{{ mealplan.actual_end_date|date:"l d F Y" }}">

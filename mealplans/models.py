@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 
@@ -10,7 +12,7 @@ class MealPlan(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is None:
             MealPlan.objects.filter(user=self.user).exclude(pk=self.pk).order_by('-creation_date').update(
-                actual_end_date=self.creation_date)
+                actual_end_date=datetime.now())
         super().save(*args, **kwargs)
 
 

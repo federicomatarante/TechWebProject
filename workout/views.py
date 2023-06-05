@@ -2,24 +2,27 @@ import json
 from json import JSONDecodeError
 from pprint import pprint
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import DetailView, TemplateView, UpdateView, FormView
 
-from GymApp.models import GymUser
+from GymApp.models import GymUser, Notifications
 from GymApp.utils import send_pdf, _get_or_error
 from base_views import SearchListView
 from workout.models import WorkoutPlan, Exercise, ExerciseSet, WorkoutDay
 
 
-class UserWorkoutPlanView(DetailView):
+class UserWorkoutPlanView(LoginRequiredMixin, DetailView):
     model = WorkoutPlan
     template_name = 'workout_detail.html'
     context_object_name = 'workoutPlan'
 
     def get_object(self, queryset=None):
+        Notifications.objects.filter(pk=self.request.user.notifications.pk).update(workout=False)
         user = self.request.user
         index = int(self.request.GET.get('index')) if self.request.GET.get('index') else 0
         if index:
@@ -49,6 +52,7 @@ class UserWorkoutPlanView(DetailView):
 
 
 @require_GET
+@login_required
 def download_workout(request):
     index = int(request.GET.get('index')) if request.GET.get('index') else 0
     workout = WorkoutPlan.objects.filter(user=request.user).order_by('-created')[index]
@@ -56,7 +60,7 @@ def download_workout(request):
     return send_pdf(rendered_html, f'workout_{index}')
 
 
-class ManageWorkoutsView(SearchListView):
+class ManageWorkoutsView(LoginRequiredMixin, SearchListView):
     template_name = 'manage_workouts.html'
 
     def __init__(self):
@@ -71,10 +75,10 @@ class ManageWorkoutsView(SearchListView):
         return f'/workout/manage/createWorkout/{obj.username}'
 
     def get_name(self, obj) -> str:
-        return obj.username
+        return (obj.first_name + ' ' + obj.last_name) if (obj.first_name and obj.last_name) else obj.username
 
 
-class CreateWorkoutView(TemplateView):
+class CreateWorkoutView(LoginRequiredMixin, TemplateView):
     template_name = 'workout_create.html'
 
     def get_context_data(self, **kwargs):
@@ -84,11 +88,11 @@ class CreateWorkoutView(TemplateView):
         return context
 
 
-class UpdateWorkoutView(TemplateView):
+class UpdateWorkoutView(LoginRequiredMixin, TemplateView):
     template_name = 'workout_update.html'
 
     def get_object(self, queryset=None):
-        user = self.request.user
+        user = GymUser.objects.get(username=self.kwargs['userName'])
         try:
             return WorkoutPlan.objects.filter(user=user, actual_end_date=None).order_by('-created')[0]
         except IndexError:
@@ -96,7 +100,7 @@ class UpdateWorkoutView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['userName'] = self.request.user.username
+        context['userName'] = self.kwargs['userName']
         context['exercises'] = {exercise.id: exercise.name for exercise in Exercise.objects.all()}
         obj = self.get_object()
         workoutPlanJson = {
@@ -119,6 +123,7 @@ class UpdateWorkoutView(TemplateView):
 
 
 @require_POST
+@login_required
 def save_workout(request, userName):
     try:
         body = json.loads(request.body)
@@ -145,6 +150,8 @@ def save_workout(request, userName):
                 exercise = Exercise.objects.get(id=exerciseId)
                 exerciseSet = ExerciseSet(exercise=exercise, reps=reps, sets=sets, workout_day=workoutDay)
                 exerciseSet.save()
+        user.notifications.workout = True
+        user.notifications.save()
     except JSONDecodeError:
         return HttpResponse(status=400, content='Invalid JSON')
     except ValueError:

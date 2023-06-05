@@ -7,11 +7,13 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link {% if highlighted_index == 1 %} active {% endif %}"
-                            {% if highlighted_index != 1 %} href="{% url 'bullettinboard' %}{% endif %}">Bacheca</a>
+                            {% if highlighted_index != 1 %} href="{% url 'bullettinboard' %}{% endif %}">Bacheca
+                        {% if request.user.notifications.bullettinboard %}<sup style="color: red">1</sup> {% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if highlighted_index == 2 %} active {% endif %}"
-                            {% if highlighted_index != 2 %} href="{% url 'workout' %}{% endif %}">Schede</a>
+                            {% if highlighted_index != 2 %} href="{% url 'workout' %}{% endif %}">Schede
+                    {% if request.user.notifications.workout %}<sup style="color: red">1</sup> {% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if highlighted_index == 3 %} active {% endif %}"
@@ -19,7 +21,8 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if highlighted_index == 4 %} active {% endif %}"
-                            {% if highlighted_index != 4 %} href="{% url 'meaplan' %}{% endif %}">Dieta</a>
+                            {% if highlighted_index != 4 %} href="{% url 'meaplan' %}{% endif %}">Dieta
+                    {% if request.user.notifications.mealplan %}<sup style="color: red">1</sup> {% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if highlighted_index == 5 %} active {% endif %}"

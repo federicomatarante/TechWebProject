@@ -24,7 +24,7 @@ class SearchListView(ListView, ABC):
         context = super().get_context_data(**kwargs)
         context['search'] = CustomSpanWidget(
             [(self.get_name(item), self.get_url(item)) for item in self.object_list]).render('search',
-                                                                                       '')
+                                                                                             '')
         return context
 
     def search(self, string: str) -> QuerySet:
@@ -33,5 +33,6 @@ class SearchListView(ListView, ABC):
     def get_url(self, obj) -> str:
         pass
 
-    def get_name(self,obj)-> str:
+    def get_name(self, obj) -> str:
         pass
+

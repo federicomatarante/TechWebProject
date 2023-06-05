@@ -8,7 +8,6 @@
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">Scheda</h3>
-                <div style="display: flex; justify-content: space-between"></div>
                 <a href="{% url 'download_workout' %}?index={{ index }}"><button style="flex-grow: 1; width: 30%" class="btn btn-dark"> Scarica </button></a>
                 <button style="flex-grow: 1; width: 30%" class="btn btn-dark" onclick="window.location.href = '{% url 'manage_workouts' %}'">Gestisci schede</button>
             </div>
@@ -35,7 +34,7 @@
                                 </thead>
                                 <tbody id="workoutDayTable-1">
                                 {% for exercise_set in workoutDay.exercise_sets.all %}
-                                    <tr>
+                                    <tr title="{{ exercise_set.exercise.description }}">
                                         <td>
                                             <fieldset>
                                                 <input class="form-control" type="text" min="1" max="100"
@@ -64,11 +63,11 @@
                     {% endfor %}
                     <div class="mb-4 fa-bold" id="workoutExpirationDayContent">
                         {% if workoutPlan.actual_end_date %}
-                            <label class="form-label">Scaduto</label>
+                            <h5 style="text-align: center">Scaduto</h5>
                             <input class="form-control" type="text" readonly="readonly"
                                    value="{{ workoutPlan.actual_end_date|date:"l d F Y" }}">
                         {% else %}
-                            <label class="form-label">Data di scadenza</label>
+                            <h5 style="text-align: center">Data di scadenza</h5>
                             <input class="form-control" type="text" readonly="readonly"
                                    value="{{ workoutPlan.expected_end_date|date:"l d F Y" }}">
                         {% endif %}

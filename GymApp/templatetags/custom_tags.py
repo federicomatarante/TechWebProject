@@ -9,7 +9,8 @@ def logged_header(request, highlighted_index: int):
     template = get_template('loggedheader.html')
     context = {
         'highlighted_index': highlighted_index,
-        'user': request.user
+        'user': request.user,
+        'request': request
     }
     return template.render(context)
 
