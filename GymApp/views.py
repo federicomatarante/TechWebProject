@@ -9,6 +9,7 @@ from GymApp.forms import UserRegistrationForm
 from GymApp.models import GymUser, Mail
 from GymApp.settings import MEDIA_ROOT
 
+
 class HomePageView(CreateView):
     model = Mail
     fields = '__all__'
@@ -33,7 +34,6 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
 
 class UserEditForm(forms.ModelForm):
-
     class Meta:
         model = GymUser
         fields = ['username', 'first_name', 'last_name', 'email', 'weight', 'height', 'date_of_birth', 'picture']

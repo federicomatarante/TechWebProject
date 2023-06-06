@@ -10,9 +10,11 @@
                 <h3 class="fw-bold">Dieta</h3>
                 <a href="{% url 'download_mealPlan' %}?index={{ index }}">
                     <button class="btn btn-dark" style="width: 30%">Scarica</button></a>
-                <button class="btn btn-dark" style="width: 30%"
-                        onclick="window.location.href = '{% url 'manage_mealplans' %}'">Gestisci diete
-                </button>
+                {% if user.groups.all.0.name == 'PersonalTrainer' or user.is_superuser %}
+                    <button class="btn btn-dark" style="width: 30%"
+                            onclick="window.location.href = '{% url 'manage_mealplans' %}'">Gestisci diete
+                    </button>
+                {% endif %}
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 justify-content-center">

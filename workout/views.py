@@ -1,17 +1,18 @@
 import json
-from json import JSONDecodeError
-from pprint import pprint
 
-from django.contrib.auth.decorators import login_required
+from json import JSONDecodeError
+
+from braces.views import GroupRequiredMixin
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST, require_GET
-from django.views.generic import DetailView, TemplateView, UpdateView, FormView
+from django.views.generic import DetailView, TemplateView
 
 from GymApp.models import GymUser, Notifications
-from GymApp.utils import send_pdf, _get_or_error
+from GymApp.utils import send_pdf, get_or_error, isPersonalTrainer
 from base_views import SearchListView
 from workout.models import WorkoutPlan, Exercise, ExerciseSet, WorkoutDay
 
@@ -53,6 +54,7 @@ class UserWorkoutPlanView(LoginRequiredMixin, DetailView):
 
 @require_GET
 @login_required
+@user_passes_test(isPersonalTrainer)
 def download_workout(request):
     index = int(request.GET.get('index')) if request.GET.get('index') else 0
     workout = WorkoutPlan.objects.filter(user=request.user).order_by('-created')[index]
@@ -60,9 +62,9 @@ def download_workout(request):
     return send_pdf(rendered_html, f'workout_{index}')
 
 
-class ManageWorkoutsView(LoginRequiredMixin, SearchListView):
+class ManageWorkoutsView(GroupRequiredMixin,LoginRequiredMixin, SearchListView):
     template_name = 'manage_workouts.html'
-
+    group_required = ["PersonalTrainer"]
     def __init__(self):
         super().__init__(GymUser, 'username', 'gymusers', 10)
 
@@ -78,8 +80,9 @@ class ManageWorkoutsView(LoginRequiredMixin, SearchListView):
         return (obj.first_name + ' ' + obj.last_name) if (obj.first_name and obj.last_name) else obj.username
 
 
-class CreateWorkoutView(LoginRequiredMixin, TemplateView):
+class CreateWorkoutView(GroupRequiredMixin,LoginRequiredMixin, TemplateView):
     template_name = 'workout_create.html'
+    group_required = ["PersonalTrainer"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -88,8 +91,9 @@ class CreateWorkoutView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class UpdateWorkoutView(LoginRequiredMixin, TemplateView):
+class UpdateWorkoutView(GroupRequiredMixin,LoginRequiredMixin, TemplateView):
     template_name = 'workout_update.html'
+    group_required = ["PersonalTrainer"]
 
     def get_object(self, queryset=None):
         user = GymUser.objects.get(username=self.kwargs['userName'])
@@ -124,11 +128,12 @@ class UpdateWorkoutView(LoginRequiredMixin, TemplateView):
 
 @require_POST
 @login_required
+@user_passes_test(isPersonalTrainer)
 def save_workout(request, userName):
     try:
         body = json.loads(request.body)
-        days = _get_or_error(body, 'days', list)
-        expirationDay = _get_or_error(body, 'expirationDay', str)
+        days = get_or_error(body, 'days', list)
+        expirationDay = get_or_error(body, 'expirationDay', str)
         user = GymUser.objects.get(username=userName)
         workoutId = body.get('id')
         if workoutId:
@@ -143,10 +148,10 @@ def save_workout(request, userName):
         for dayObj in days:
             workoutDay = WorkoutDay(workout_plan=workoutPlan)
             workoutDay.save()
-            for exerciseObj in _get_or_error(dayObj, 'exercises', list):
-                exerciseId = _get_or_error(exerciseObj, 'exercise', int)
-                reps = _get_or_error(exerciseObj, 'reps', int)
-                sets = _get_or_error(exerciseObj, 'sets', int)
+            for exerciseObj in get_or_error(dayObj, 'exercises', list):
+                exerciseId = get_or_error(exerciseObj, 'exercise', int)
+                reps = get_or_error(exerciseObj, 'reps', int)
+                sets = get_or_error(exerciseObj, 'sets', int)
                 exercise = Exercise.objects.get(id=exerciseId)
                 exerciseSet = ExerciseSet(exercise=exercise, reps=reps, sets=sets, workout_day=workoutDay)
                 exerciseSet.save()

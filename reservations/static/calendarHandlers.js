@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let headerButton = cardHeader.children.item(1);
             let cardBody = active_row.children.item(1);
             headerTitle.innerHTML = "Orari - " + calendarDay;
-            headerButton.href = calendarDay + "-" + variables.getAttribute('month') + "-" + variables.getAttribute('year') + "/openinghours/";
+            if(headerButton!=null) headerButton.href = calendarDay + "-" + variables.getAttribute('month') + "-" + variables.getAttribute('year') + "/openinghours/";
             cardBody.appendChild(await generateDayInfo(calendarDay));
             active_row.style.display = 'block';
         });

@@ -1,11 +1,13 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, CreateView, FormView
+from django.views.generic import ListView, FormView
 
-from GymApp.models import GymUser, Notifications
+from GymApp.models import Notifications
+from GymApp.utils import isPersonalTrainer
 from bullettinboard.forms import MessageForm
 from bullettinboard.models import Message
 
@@ -17,6 +19,11 @@ class BullettinBoardView(LoginRequiredMixin, ListView, FormView):
     success_url = reverse_lazy('bullettinboard')
     context_object_name = 'messages'
     paginate_by = 5
+
+    def post(self, request, *args, **kwargs):
+        if not isPersonalTrainer(request.user):
+            return HttpResponseForbidden()
+        return super().post(request, *args, **kwargs)
 
     def get_queryset(self):
         Notifications.objects.filter(pk=self.request.user.notifications.pk).update(bullettinboard=False)
@@ -43,7 +50,8 @@ class BullettinBoardView(LoginRequiredMixin, ListView, FormView):
 
 @require_POST
 @login_required
-def message_delete(request, id: int):  # TODO solo chi autorizzato
+@user_passes_test(isPersonalTrainer)
+def message_delete(request, id: int):
     message = get_object_or_404(Message, id=id)
     message.delete()
     return redirect('bullettinboard')

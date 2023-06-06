@@ -45,16 +45,18 @@
                 <h3 class="fw-bold">Bacheca</h3>
             </div>
         </div>
-        <div class="row row-cols-1 row-cols-md-2 justify-content-center">
-            <form class="d-flex flex-column justify-content-center text-center" style="margin-bottom: 2vh"
-                  method="post">
-                {% csrf_token %}
-                <label for="id_text"></label>
-                {{ form.text }}
+        {% if user.groups.all.0.name == 'PersonalTrainer' or user.is_superuser %}
+            <div class="row row-cols-1 row-cols-md-2 justify-content-center">
+                <form class="d-flex flex-column justify-content-center text-center" style="margin-bottom: 2vh"
+                      method="post">
+                    {% csrf_token %}
+                    <label for="id_text"></label>
+                    {{ form.text }}
 
-                <button class="btn btn-light mt-3 mx-auto" type="submit">Invia</button>
-            </form>
-        </div>
+                    <button class="btn btn-light mt-3 mx-auto" type="submit">Invia</button>
+                </form>
+            </div>
+        {% endif %}
 
         {% for message in messages %}
 
@@ -64,7 +66,8 @@
                     <div class="row" style="padding-left: 2%;padding-bottom: 1%;">
                         <div class="col-auto">
                             {% if message.author.picture %}
-                                <img src="{{ message.author.picture.url }}" alt="{{ message.author.picture.url }}" style="width: 70px">
+                                <img src="{{ message.author.picture.url }}" alt="{{ message.author.picture.url }}"
+                                     style="width: 70px">
                             {% else %}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
                                      fill="none" style="font-size: 50px;">
@@ -79,12 +82,14 @@
                         <div class="col align-self-center" style="padding-left: 0;">
                             <h4>{{ message.author.username }}</h4>
                         </div>
-                        <div class="col align-self-end" style="text-align: end">
-                            <button itemid="{{ message.id }}" class="btn delete_button">
-                                <i class="material-icons">delete</i>
-                            </button>
+                        {% if user.groups.all.0.name == 'PersonalTrainer' or user.is_superuser %}
+                            <div class="col align-self-end" style="text-align: end">
+                                <button itemid="{{ message.id }}" class="btn delete_button">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        {% endif %}
 
-                        </div>
                     </div>
                 </div>
                 <div class="col" style="width: 100%;">

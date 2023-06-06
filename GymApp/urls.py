@@ -27,7 +27,7 @@ admin.site.header = 'loggedheader.html'
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('bullettinboard', include('bullettinboard.urls')),
+    path('bullettinboard/', include('bullettinboard.urls')),
     path('reservations/', include('reservations.urls')),
     path('workout/', include('workout.urls')),
     path('mealplans/', include('mealplans.urls')),

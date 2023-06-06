@@ -1,10 +1,6 @@
 Da fare:
-- Protezione risorse con gruppi e permessi
-- Pagina di gestione admin
-- Rendere i dati più utili ( ad es la descrizione di esercizi )
 - Debug
 - Controlla i todo in giro per il codice
-- Rendi mail visualizzabili in admin
 
 Opzionali ma fighe:
 - Codice piu utilizzabile ( evita cloni )
@@ -12,5 +8,4 @@ Opzionali ma fighe:
 - Chat
 - Pagina 404 personalizzata
 - Auto-compila cibi quando crei dieta
-- Far creare account solo da admin
 - Sistema file scaricabili

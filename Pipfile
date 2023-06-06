@@ -12,6 +12,7 @@ crispy-bootstrap4 = "*"
 djangorestframework = "*"
 pdfkit = "*"
 wkhtmltopdf = "*"
+django-braces = "*"
 
 [dev-packages]
 

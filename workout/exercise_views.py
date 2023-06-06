@@ -34,7 +34,6 @@ class ExerciseCreateView(CreateView):
     success_url = reverse_lazy('exercise_list')
 
 
-
 class ExerciseUpdateView(UpdateView):
     model = Exercise
     template_name = 'exercise_update.html'

@@ -8,8 +8,12 @@
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">Scheda</h3>
-                <a href="{% url 'download_workout' %}?index={{ index }}"><button style="flex-grow: 1; width: 30%" class="btn btn-dark"> Scarica </button></a>
-                <button style="flex-grow: 1; width: 30%" class="btn btn-dark" onclick="window.location.href = '{% url 'manage_workouts' %}'">Gestisci schede</button>
+                <a href="{% url 'download_workout' %}?index={{ index }}"><button style="flex-grow: 1; width: 30%" class="btn btn-dark">Scarica</button></a>
+                {% if user.groups.all.0.name == 'PersonalTrainer' or user.is_superuser %}
+                    <button style="flex-grow: 1; width: 30%" class="btn btn-dark"
+                            onclick="window.location.href = '{% url 'manage_workouts' %}'">Gestisci schede
+                    </button>
+                {% endif %}
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 justify-content-center">

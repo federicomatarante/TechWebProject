@@ -5,7 +5,7 @@ import pdfkit
 from django.http import FileResponse
 
 
-def _get_or_error(dictionary, key, type):
+def get_or_error(dictionary, key, type):
     value = dictionary.get(key)
     if not value:
         raise ValueError(f'{key} is required')
@@ -35,3 +35,7 @@ class WeekDay(models.TextChoices):
     def fromDate(date: date) -> 'WeekDay':
         weekDay = date.weekday()
         return WeekDay.choices[weekDay]
+
+
+def isPersonalTrainer(user):
+    return user.is_authenticated and ('PersonalTrainer' in user.groups.values_list('name', flat=True) or user.is_superuser)

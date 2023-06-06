@@ -42,7 +42,11 @@
         <div class="row mb-4 mb-lg-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h3 class="fw-bold">Calendario</h3>
-                <button class="btn btn-dark" onclick="window.location.href = '{% url 'openinghours' 0 %}'">Orari di apertura</button>
+                {% if user.groups.all.0.name == 'PersonalTrainer' or user.is_superuser %}
+                    <button class="btn btn-dark" onclick="window.location.href = '{% url 'openinghours' 0 %}'">Orari di
+                        apertura
+                    </button>
+                {% endif %}
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 justify-content-center text-center d-flex">
@@ -119,9 +123,13 @@
                                      style="display: none; width: 100%;">
                                     <div class="card-header" style="display: flex; align-items: center">
                                         <h1 style="flex-grow: 1; text-align: center"></h1>
-                                        <a>
-                                            <button class="btn btn-outline-dark" style="margin-left: auto;"> Impostazioni</button>
-                                        </a>
+                                        {% if user.groups.all.0.name == 'PersonalTrainer' or user.is_superuser %}
+                                            <a>
+                                                <button class="btn btn-outline-dark" style="margin-left: auto;">
+                                                    Impostazioni
+                                                </button>
+                                            </a>
+                                        {% endif %}
                                     </div>
                                     <div class="card-body">
                                     </div>

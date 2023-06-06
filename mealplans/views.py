@@ -2,9 +2,9 @@ import json
 from datetime import datetime
 from json import JSONDecodeError
 from pprint import pprint
-from typing import Union
 
-from django.contrib.auth.decorators import login_required
+from braces.views import GroupRequiredMixin
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import DetailView, TemplateView
 
 from GymApp.models import GymUser, Notifications
-from GymApp.utils import send_pdf, _get_or_error
+from GymApp.utils import send_pdf, get_or_error, isPersonalTrainer
 from base_views import SearchListView
 from mealplans.models import MealPlan, Meal, Ingredient, MealDay
 
@@ -44,8 +44,9 @@ class UserMealPlanView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ManageMealPlansView(LoginRequiredMixin, SearchListView):
+class ManageMealPlansView(GroupRequiredMixin, LoginRequiredMixin, SearchListView):
     template_name = 'manage_mealplans.html'
+    group_required = ['PersonalTrainer']
 
     def __init__(self):
         super().__init__(GymUser, 'username', 'gymusers', 10)
@@ -59,11 +60,12 @@ class ManageMealPlansView(LoginRequiredMixin, SearchListView):
         return reverse_lazy('create_mealplan', kwargs={'userName': obj.username})
 
     def get_name(self, obj) -> str:
-        return (obj.first_name + ' ' + obj.last_name) if (obj.first_name and obj.last_name) else obj.username
+        return obj.username
 
 
-class EditMealPlanView(LoginRequiredMixin, TemplateView):
+class EditMealPlanView(GroupRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = 'mealplanedit.html'
+    group_required = ['PersonalTrainer']
 
     def get_object(self):
         user = GymUser.objects.get(username=self.kwargs['userName'])
@@ -98,8 +100,9 @@ class EditMealPlanView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CreateMealPlanView(LoginRequiredMixin, TemplateView):
+class CreateMealPlanView(GroupRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = 'mealplancreate.html'
+    group_required = ['PersonalTrainer']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,11 +113,12 @@ class CreateMealPlanView(LoginRequiredMixin, TemplateView):
 
 @require_POST
 @login_required
+@user_passes_test(isPersonalTrainer)
 def save_mealPlan(request, userName):
     try:
         body = json.loads(request.body)
         pprint(body)
-        expiration_date = datetime.strptime(_get_or_error(body, 'expirationDay', str), '%Y-%m-%d')
+        expiration_date = datetime.strptime(get_or_error(body, 'expirationDay', str), '%Y-%m-%d')
         user = GymUser.objects.get(username=userName)
         mealPlanId = body.get('id')
         if mealPlanId:
@@ -125,21 +129,21 @@ def save_mealPlan(request, userName):
         else:
             meal_plan = MealPlan(expected_end_date=expiration_date, user=user)
             meal_plan.save()
-        days = _get_or_error(body, 'days', list)
+        days = get_or_error(body, 'days', list)
         for day in days:
-            day_number = _get_or_error(day, 'day', int)
+            day_number = get_or_error(day, 'day', int)
             meal_day = MealDay(day=day_number, mealPlan=meal_plan)
             meal_day.save()
-            meals = _get_or_error(day, 'meals', list)
+            meals = get_or_error(day, 'meals', list)
             for parsed_meal in meals:
-                meal_name = _get_or_error(parsed_meal, 'name', str)
+                meal_name = get_or_error(parsed_meal, 'name', str)
                 meal = Meal(name=meal_name, mealDay=meal_day)
                 meal.save()
-                ingredients = _get_or_error(parsed_meal, 'ingredients', list)
+                ingredients = get_or_error(parsed_meal, 'ingredients', list)
                 for parsed_ingredient in ingredients:
-                    ingredient_name = _get_or_error(parsed_ingredient, 'name', str)
-                    ingredient_quantity = _get_or_error(parsed_ingredient, 'quantity', int)
-                    ingredient_unit = _get_or_error(parsed_ingredient, 'unit', str)
+                    ingredient_name = get_or_error(parsed_ingredient, 'name', str)
+                    ingredient_quantity = get_or_error(parsed_ingredient, 'quantity', int)
+                    ingredient_unit = get_or_error(parsed_ingredient, 'unit', str)
                     ingredient = Ingredient(name=ingredient_name, quantity=ingredient_quantity,
                                             quantityType=ingredient_unit, meal=meal)
                     ingredient.save()

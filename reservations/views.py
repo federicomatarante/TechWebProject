@@ -1,6 +1,7 @@
 import json
 from datetime import date, timedelta
 
+from braces.views import GroupRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponse
@@ -8,7 +9,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView, UpdateView
 
-from reservations.forms import GymDay, GymDayForm, ExceptionalGymDayForm
+from reservations.forms import GymDayForm, ExceptionalGymDayForm
 from reservations.models import Calendar, GymDay, ExceptionalGymDay
 
 
@@ -34,10 +35,11 @@ class CalendarView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class EditGymDayView(LoginRequiredMixin, UpdateView):
+class EditGymDayView(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     model = GymDay
     template_name = 'openinghourssettings.html'
     form_class = GymDayForm
+    group_required = ['PersonalTrainer']
 
     def get_success_url(self):
         return reverse_lazy('reservations')
@@ -89,6 +91,7 @@ class EditExceptionalGymDayView(EditGymDayView):
     model = ExceptionalGymDay
     template_name = 'openinghourssettings.html'
     form_class = ExceptionalGymDayForm
+    group_required = ['PersonalTrainer']
 
     def get_success_url(self):
         return reverse_lazy('reservations')
