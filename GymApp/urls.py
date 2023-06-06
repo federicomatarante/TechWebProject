@@ -18,10 +18,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
-from django.views.generic import TemplateView
 
 from GymApp import settings
 from GymApp.views import UserRegistrationView, UserDetailView, UserEditView, HomePageView
+
+admin.site.header = 'loggedheader.html'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,7 +36,6 @@ urlpatterns = [
 
     path('', HomePageView.as_view(), name='home'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('register/', UserRegistrationView.as_view(), name='register'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
