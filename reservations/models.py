@@ -28,7 +28,6 @@ class ExceptionalGymDay(models.Model):
         return self.date.weekday()
 
 
-
 class Reservation(models.Model):
     user = models.ForeignKey(GymUser, on_delete=models.CASCADE)
     day = models.DateField()

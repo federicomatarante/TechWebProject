@@ -36,7 +36,6 @@ class WeekDay(models.TextChoices):
         weekDay = date.weekday()
         return WeekDay.choices[weekDay]
 
-
 def send_mail(receiver_email, subject, message):
     import smtplib
     from email.mime.text import MIMEText
