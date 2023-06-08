@@ -138,7 +138,7 @@ class EditExceptionalGymDayView(EditGymDayView):
     def form_valid(self, form):
         hours = form.cleaned_data['hours']
         old_hours = self.object.hours
-        removed_hours = old_hours - hours
+        removed_hours = list(set(old_hours) - set(hours))
         year, month = self.object.date.year, self.object.date.month
         for hour in removed_hours:
             Calendar.getCalendar(year, month).getDay(self.object.date.day).deleteReservations(hour=hour)

@@ -11,18 +11,22 @@ from GymApp.models import GymUser, Mail
 from GymApp.settings import MEDIA_ROOT
 
 
+class MailForm(forms.ModelForm):
+    class Meta:
+        model = Mail
+        fields = ['email', 'title', 'message']
+        widgets = {
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'title': forms.TextInput(attrs={'placeholder': 'Titolo'}),
+            'message': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Scrivi un messaggio...'}),
+        }
+
+
 class HomePageView(CreateView):
     model = Mail
-    fields = '__all__'
+    form_class = MailForm
     template_name = 'home.html'
     success_url = reverse_lazy('home')
-
-
-class UserRegistrationView(CreateView):
-    model = GymUser
-    form_class = UserRegistrationForm
-    template_name = 'registration/register.html'
-    success_url = reverse_lazy('login')
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):

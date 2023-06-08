@@ -21,4 +21,4 @@ class Mail(models.Model):
     email = models.EmailField(verbose_name='email')
     title = models.CharField(max_length=100, verbose_name='titolo')
     message = models.TextField(verbose_name='messaggio')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='data di creazione')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='data di creazione'   )

@@ -23,6 +23,11 @@ class ExceptionalGymDay(models.Model):
     hours = IntegerListField()
     capacity = models.IntegerField(default=30)
 
+    @property
+    def dayOfWeek(self):
+        return self.date.weekday()
+
+
 
 class Reservation(models.Model):
     user = models.ForeignKey(GymUser, on_delete=models.CASCADE)
