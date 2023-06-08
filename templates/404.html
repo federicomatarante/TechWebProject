@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load custom_tags %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% logged_header request -1 %}
+    {% else %}
+        {% include 'unloggedheader.html' %}
+    {% endif %}
+    <div style="width: 100%; height: 70rem; background-size: cover; background-position:center; background-image: url('media/404.png')">
+        <h1 style="padding-left: 13vw; padding-top:40vh;font-size: 90px; color: white;font-family: 'Apple Color Emoji',serif;text-shadow: -1px -1px 0 gray, 1px -1px 0 gray, -1px 1px 0 gray, 1px 1px 0 gray; ">
+            Pagina non trovata!</h1>
+    </div>
+{% endblock %}

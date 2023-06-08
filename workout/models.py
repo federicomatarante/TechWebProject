@@ -8,7 +8,7 @@ from GymApp.models import GymUser
 class Exercise(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='exercise_images', blank=True)  # TODO ?
+    image = models.ImageField(upload_to='exercise_images', blank=True)
 
 
 class WorkoutPlan(models.Model):

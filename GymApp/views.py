@@ -2,6 +2,7 @@ import os
 
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView
 
@@ -70,3 +71,7 @@ class UserEditView(LoginRequiredMixin, UpdateView):
             if os.path.exists(media_path):
                 os.remove(media_path)
         return super().post(request, *args, **kwargs)
+
+
+def handler_404(request, exception):
+    return render(request, '404.html', status=404)

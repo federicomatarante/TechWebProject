@@ -29,6 +29,7 @@
         <option value="$MODULE_DIR$/reservations/templates" />
         <option value="$MODULE_DIR$/bullettinboard/templates" />
         <option value="$MODULE_DIR$/mealplans/templates" />
+        <option value="$MODULE_DIR$/chat/templates" />
       </list>
     </option>
   </component>

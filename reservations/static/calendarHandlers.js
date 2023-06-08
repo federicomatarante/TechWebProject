@@ -9,19 +9,19 @@ function makeGetRequest(url, year, month, day) {
             return data;
         })
         .catch(error => {
-            console.error('Errore:', error);
+            alert("Errore: " + error);
         });
 }
 
 function getCookie(name) {
-  var cookies = document.cookie.split(';');
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i].trim();
-    if (cookie.startsWith(name + '=')) {
-      return cookie.substring(name.length + 1);
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+        }
     }
-  }
-  return null;
+    return null;
 }
 
 async function makeReservation(day, hour) {
@@ -79,7 +79,6 @@ async function generateDayInfo(day) {
     let fullHours = dayData.fullHours
     let reservations = dayData.reservations;
     timeSlots.forEach(function (timeSlot) {
-        // TODO questo bottone deve essere disattivato se già prenotato dall'utente o se pieno, o se vuoto. Inoltre deve cambiare colore.
         var button = document.createElement('button');
         button.style.padding = '0';
         button.style.margin = '0';
@@ -96,8 +95,7 @@ async function generateDayInfo(day) {
                     active_row.children.item(1).innerHTML = '';
                     active_row.children.item(1).appendChild(await generateDayInfo(day));
                 }).catch(error => {
-                    console.error('Errore:', error);
-                    // TODO implement handling ( fallo ovunque sulle richieste HTTP di JS )
+                    alert("Errore: " + error);
                 })
             }
         } else {
@@ -116,8 +114,7 @@ async function generateDayInfo(day) {
                     active_row.children.item(1).innerHTML = '';
                     active_row.children.item(1).appendChild(await generateDayInfo(day));
                 }).catch(error => {
-                    console.error('Errore:', error);
-                    // TODO implement handling ( fallo ovunque sulle richieste HTTP di JS )
+                    alert("Errore: " + error);
                 })
             }
         }
@@ -159,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let headerButton = cardHeader.children.item(1);
             let cardBody = active_row.children.item(1);
             headerTitle.innerHTML = "Orari - " + calendarDay;
-            if(headerButton!=null) headerButton.href = calendarDay + "-" + variables.getAttribute('month') + "-" + variables.getAttribute('year') + "/openinghours/";
+            if (headerButton != null) headerButton.href = calendarDay + "-" + variables.getAttribute('month') + "-" + variables.getAttribute('year') + "/openinghours/";
             cardBody.appendChild(await generateDayInfo(calendarDay));
             active_row.style.display = 'block';
         });

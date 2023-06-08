@@ -37,5 +37,33 @@ class WeekDay(models.TextChoices):
         return WeekDay.choices[weekDay]
 
 
+def send_mail(receiver_email, subject, message):
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+
+    # Email configuration
+    sender_email = 'your_email@gmail.com'
+    password = 'your_email_password'
+
+    # Create a MIME multipart message
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(message, 'plain'))
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, msg.as_string())
+    except Exception as e:
+        raise e
+    finally:
+        # Close the SMTP connection
+        server.quit()
+
+
 def isPersonalTrainer(user):
-    return user.is_authenticated and ('PersonalTrainer' in user.groups.values_list('name', flat=True) or user.is_superuser)
+    return user.is_authenticated and (
+            'PersonalTrainer' in user.groups.values_list('name', flat=True) or user.is_superuser)

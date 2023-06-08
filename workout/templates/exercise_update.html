@@ -4,7 +4,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("delete_button").addEventListener("click", function () {
                 var r = confirm("Sei sicuro di voler eliminare l'esercizio?");
-                console.log("Done!");
                 if (r === true) {
                     let xhr = new XMLHttpRequest();
                     xhr.open("POST", "{% url 'delete_exercise' exercise.id %}", true);

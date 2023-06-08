@@ -6,7 +6,6 @@
     <script>
         function search() {
             let input = document.getElementById('search').value;
-            console.log(input);
             window.location.href = "{% url 'manage_workouts' %}" + "?search=" + input;
 
         }

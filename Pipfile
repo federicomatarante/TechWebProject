@@ -13,6 +13,7 @@ djangorestframework = "*"
 pdfkit = "*"
 wkhtmltopdf = "*"
 django-braces = "*"
+channels = "*"
 
 [dev-packages]
 

@@ -1,11 +1,13 @@
 Da fare:
 - Debug
-- Controlla i todo in giro per il codice
+- Testing
+- Testare orari pieni
+- Testa eliminare reservations
 
 Opzionali ma fighe:
+- Sistema di conferma di ogni cambiamento ( come invio mail )
 - Codice piu utilizzabile ( evita cloni )
-- Sistema mail automatiche
+- Sistema mail automatiche. Poter rispondere direttamente alle mail dal pannello amministrazione.
 - Chat
-- Pagina 404 personalizzata
 - Auto-compila cibi quando crei dieta
 - Sistema file scaricabili

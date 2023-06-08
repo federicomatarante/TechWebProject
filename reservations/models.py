@@ -63,7 +63,7 @@ class Day:
         return []
 
     @property
-    def fullHours(self) -> List[int]:  # TODO
+    def fullHours(self) -> List[int]:
         reservations = Reservation.objects.filter(day=self.date)
         grouped = groupby(reservations, key=lambda x: x.hour)
         return [hour for hour, group in grouped if len(list(group)) >= self.capacity]
@@ -75,14 +75,25 @@ class Day:
             raise ValueError(f"Hour {hour} is not open")
         Reservation.objects.create(user=user, day=self.date, hour=hour)
 
-    def getReservations(self, user):
+    def getReservations(self, user=None):
         try:
+            if user is None:
+                return [reservation.hour for reservation in Reservation.objects.filter(day=self.date)]
             return [reservation.hour for reservation in Reservation.objects.filter(day=self.date, user=user)]
         except Reservation.DoesNotExist:
             return []
 
-    def deleteReservation(self, hour, user):
-        Reservation.objects.filter(day=self.date, hour=hour, user=user).delete()
+    def deleteReservations(self, hour=None, user=None):
+        if user is None:
+            if hour is None:
+                Reservation.objects.filter(day=self.date).delete()
+            else:
+                Reservation.objects.filter(day=self.date, hour=hour).delete()
+        else:
+            if hour is None:
+                Reservation.objects.filter(day=self.date, user=user).delete()
+            else:
+                Reservation.objects.filter(day=self.date, hour=hour, user=user).delete()
 
 
 @dataclass
@@ -156,5 +167,3 @@ class Calendar:
                 if d.date.day == day:
                     return d
         raise ValueError(f"Day {day} not found")
-
-

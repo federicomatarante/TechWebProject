@@ -1,0 +1,137 @@
+{% extends 'loggedbase.html' %}
+{% load custom_tags %}
+
+{% block head %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+
+        // Mio codice
+        $(document).ready(function () {
+            let elements = document.getElementsByClassName("delete_button");
+            for (let i = 0; i < elements.length; i++) {
+                let element = elements[i];
+                element.addEventListener("click", function () {
+
+                    if (!confirm("Sei sicuro di voler eliminare questo messaggio?"))
+                        return;
+                    let objectId = element.getAttribute("itemid");
+                    let token = '{{ csrf_token }}';
+
+                    $.ajax({
+                        url: '/bullettinboard/delete/' + objectId,  // Imposta l'URL corretto per la tua vista Django
+                        type: 'POST',
+                        data: {
+                            'csrfmiddlewaretoken': token
+                        },
+                        success: function (data) {
+                            location.href = location.origin + location.pathname + "?page=1";
+                        }
+                    });
+                });
+            }
+
+
+        });
+    </script>
+{% endblock %}
+
+
+{% block body %}
+    {% logged_header request -1 %}
+    <div class="container py-5">
+        <div class="row mb-4 mb-lg-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h3 class="fw-bold">Chat di supporto</h3>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center">
+            <form class="d-flex flex-column justify-content-center text-center" style="margin-bottom: 2vh"
+                  method="post">
+                {% csrf_token %}
+                <label for="id_text"></label>
+                {{ form.text }}
+
+                <button class="btn btn-light mt-3 mx-auto" type="submit">Invia</button>
+            </form>
+        </div>
+
+        {% for message in messages %}
+
+            <div class="row row-cols-1 row-cols-md-2 justify-content-end mx-auto"
+                 style="max-width: 900px;margin-bottom: 50px;">
+                <div class="col" style="width: 100%;">
+                    <div class="row" style="padding-left: 2%;padding-bottom: 1%;">
+                        <div class="col-auto">
+                            {% if message.author.picture %}
+                                <img src="{{ message.author.picture.url }}" alt="{{ message.author.picture.url }}"
+                                     style="width: 70px">
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+                                     fill="none" style="font-size: 50px;">
+                                    <path fill-rule="evenodd"
+                                          d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z"
+                                          fill="currentColor"></path>
+                                    <path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z"
+                                          fill="currentColor"></path>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <div class="col align-self-center" style="padding-left: 0;">
+                            <h4>{{ message.author.username }}</h4>
+                        </div>
+                        {% if user.groups.all.0.name == 'PersonalTrainer' or user.is_superuser %}
+                            <div class="col align-self-end" style="text-align: end">
+                                <button itemid="{{ message.id }}" class="btn delete_button">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p style="padding: 20px;background: rgba(90,0,244,0.16);border-radius: 46px;box-shadow: -6px 7px 3px rgba(0,0,0,0.3);margin-bottom: 0;">
+                        {{ message.text }}
+                    </p>
+                </div>
+                <div class="col text-end">
+                    <h6 class="text-end" style="font-size: 15px;margin-bottom: 0;margin-top: 5px;margin-right: 20px;">
+                        {{ message.creation_date }}
+                    </h6>
+                </div>
+            </div>
+
+        {% endfor %}
+
+        <div style="justify-content: center; display: flex; margin-bottom: 5rem">
+            <ul class="pagination" style="align-content: center; margin: 0">
+                <! -------------------- Previous Button ------------------- >
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                    </li>
+                {% endif %}
+                <! --------------------------------------------------- >
+                <! ------------------- Number Buttons ------------------- >
+                {% for i in navigator_numbers %}
+                    <li class="page-item {% if page_obj.number == i %} active {% endif %}">
+                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                {% endfor %}
+
+                <! --------------------------------------------------- >
+                <! ------------------- Next Button ------------------- >
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                    </li>
+                {% endif %}
+
+                <! --------------------------------------------------- >
+
+            </ul>
+        </div>
+    </div>
+{% endblock %}
