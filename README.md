@@ -1,4 +1,4 @@
-# GymApp
+# GymApp 🇮🇹/🇬🇧
 ## 🇮🇹 Italiano
 
 **Disclaimer**: applicazione fatta per l'esame di _Tecnologie Web_, nel terzo anno della facoltà triennale di _Ingegneria Informatica_ di _UniMoRe_.  
